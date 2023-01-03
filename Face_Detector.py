@@ -5,23 +5,31 @@ trained_face_data = cv2.CascadeClassifier(
     'haarcascade_frontalface_default.xml')
 
 # read image
-img = cv2.imread('wingTeam.jpg')
+# img = cv2.imread('wingTeam.jpg')
+webcam = cv2.VideoCapture(0)
 
-# convert to grey scale
-greyScaleImage = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-# detect faces
-faceCoordinates = trained_face_data.detectMultiScale(greyScaleImage)
+while True:
+    successful_frame_read, frame = webcam.read()
 
-# create tuple for face coordinates
-for (x, h, y, w) in faceCoordinates:
-    cv2.rectangle(img, (x, y), (x+w, y+h),
-                  (randrange(256), randrange(256), randrange(256)), 6)
+    # convert to grey scale
+    greyScaleImage = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-# show image
-cv2.imshow("Face Detection", img)
+    # detect faces
+    faceCoordinates = trained_face_data.detectMultiScale(greyScaleImage)
 
-# prevents window from closing instantly
-cv2.waitKey()
+    # create tuple for face coordinates
+    for (x, h, y, w) in faceCoordinates:
+        cv2.rectangle(frame, (x, y), (x+w, y+h),
+                      (randrange(256), randrange(256), randrange(256)), 6)
 
-print("Code Complete")
+    # show image
+    cv2.imshow("Face Detection", frame)
+
+    # prevents window from closing instantly
+    key = cv2.waitKey(1)
+
+    if key == 81 or key == 113:
+        break
+
+webcam.release()
